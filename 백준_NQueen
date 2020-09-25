@@ -1,0 +1,39 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+
+using namespace std;
+
+int N;
+int ans = 0;
+int chess[15];
+
+
+bool isPossible(int r){
+    for(int i = 0; i<r; i++){
+        if(chess[i] == chess[r]) return false;
+        if(abs(chess[i] - chess[r]) == abs(i-r)) return false;
+    }
+    return true;
+}
+
+void search(int r){
+    if(r == N){
+        ans++;
+        return;
+    }
+    for(int i = 0; i<N; i++){
+        chess[r] = i; 
+        if(isPossible(r)) search(r+1);
+    }
+}
+
+
+int main() {
+	cin >> N;
+
+  search(0);
+
+	cout << ans;
+
+	return 0;
+}
