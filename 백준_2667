@@ -1,0 +1,58 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+
+using namespace std;
+
+int ROW[4] = { -1, 1, 0, 0 };
+int COL[4] = { 0, 0, -1, 1 };
+vector<string> map(25, "0");
+vector<vector<int>> visited(25, vector<int>(25, 0));
+vector<int> apart;
+int N;
+int complex = 0;
+int apartN = 0;
+
+void find(int R, int C) {
+	for (int i = 0; i < 4; i++) {
+		int r = R + ROW[i];
+		int c = C + COL[i];
+		if (r < N && r>=0 && c < N && c>=0) {
+			if (map[r][c] == '1' && !visited[r][c]) {
+				apartN++;
+				visited[r][c] = 1;
+				find(r, c);
+			}
+		}
+	}
+	return;
+}
+
+int main() {
+	cin >> N;
+
+	for (int i = 0; i < N; i++) {
+		cin >> map[i];
+	}
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			if (map[i][j] == '1' && !visited[i][j]) {
+				visited[i][j] = 1;
+				complex++;
+				apartN = 1;
+				find(i, j);
+				apart.push_back(apartN);
+			}
+		}
+	}
+	sort(apart.begin(), apart.end());
+
+	printf("%d\n", complex);
+	for (int i = 0; i < complex; i++) {
+		printf("%d\n", apart[i]);
+	}
+	return 0;
+}
