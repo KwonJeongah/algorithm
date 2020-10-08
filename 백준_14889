@@ -1,0 +1,47 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+
+int main() {
+	vector<int> ind;
+	int MIN = 2147483647;
+	int N;
+	int S[20][20] = { 0 };
+
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			cin >> S[i][j];
+		}
+	}
+
+	for (int i = 0; i < N / 2; i++) ind.push_back(0);
+	for (int i = 0; i < N / 2; i++) ind.push_back(1);
+
+	do {
+		vector<int> start, link;
+		int s = 0;
+		int l = 0;
+
+		for (int i = 0; i < N; i++) {
+			if (ind[i] == 1) start.push_back(i);
+			else link.push_back(i);
+		}
+
+		for (int i = 0; i < (N/2) - 1; i++) {
+			for (int j = i+1; j < N / 2; j++) {
+				s += S[start[i]][start[j]] + S[start[j]][start[i]];
+				l += S[link[i]][link[j]] + S[link[j]][link[i]];
+			}
+		}
+		if (MIN > abs(s - l)) MIN = abs(s - l);
+	} while (next_permutation(ind.begin(), ind.end()));
+
+	cout << MIN;
+	return 0;
+}
