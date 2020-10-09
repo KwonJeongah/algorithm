@@ -1,0 +1,36 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+
+using namespace std;
+int N;
+int MAX = -1;
+int DAY[15] = { 0 };
+int MONEY[15] = { 0 };
+
+void findMAX(int d, int m) {
+	if (d+DAY[d] >= N) {
+		if (d + DAY[d] == N) m += MONEY[d];
+		if (MAX < m) MAX = m;
+		return;
+	}
+	else {
+		for (int i = d+DAY[d]; i < N; i++) {
+			findMAX(i, m + MONEY[d]);
+		}
+	}	
+}
+
+int main() {
+	cin >> N;	
+
+	for (int i = 0; i < N; i++) {
+		cin >> DAY[i] >> MONEY[i];
+	}
+
+	for (int i = 0; i < N; i++) {
+		findMAX(i, 0);
+	}
+
+	printf("%d", MAX);
+	return 0;
+}
