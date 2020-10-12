@@ -1,0 +1,114 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+
+using namespace std;
+
+int N, M;
+int ANS = 1;
+int R[4] = { -1, 1, 0, 0 };
+int C[4] = { 0, 0, -1, 1 };
+int ROOM[50][50] = { 0, };
+int ROBOT[3] = { -1 };
+
+int findLeftDir() {
+	int left = ROBOT[2] - 1;
+	if (left < 0) left = 3;
+
+	return left;
+}
+
+pair<int, int> findBack() {
+	int r = ROBOT[0];
+	int c = ROBOT[1];
+
+	if (ROBOT[2] == 0) r++;
+	else if (ROBOT[2] == 1) c--;
+	else if (ROBOT[2] == 2) r--;
+	else c++;
+
+	return make_pair(r, c);
+}
+
+void goFront() {
+	if (ROBOT[2] == 0) ROBOT[0]--;
+	else if (ROBOT[2] == 1) ROBOT[1]++;
+	else if (ROBOT[2] == 2) ROBOT[0]++;
+	else ROBOT[1]--;
+}
+
+bool leftCheck() {
+	int dir = findLeftDir();
+	bool ans = false;
+
+	if (dir == 0) {
+		if (ROOM[ROBOT[0]-1][ROBOT[1]] == 0) ans = true;
+		
+	}
+	else if (dir == 1) {
+		if (ROOM[ROBOT[0]][ROBOT[1] + 1] == 0) ans = true;
+		
+	}
+	else if (dir == 2) {
+		if (ROOM[ROBOT[0] + 1][ROBOT[1]] == 0) ans = true;
+	}
+	else {
+		if (ROOM[ROBOT[0]][ROBOT[1] - 1] == 0) ans = true;
+	}
+	return ans;
+}
+
+bool checkDir() {
+	bool result = false;
+
+	for (int i = 0; i < 4; i++) {
+		if (leftCheck()) {
+			result = true;
+			ROBOT[2] = findLeftDir();
+			goFront();
+			ANS++;
+			ROOM[ROBOT[0]][ROBOT[1]] = 2;
+			break;
+		}
+		else ROBOT[2] = findLeftDir();
+	}
+
+	return result;
+}
+
+int main() {
+	cin >> N >> M;
+
+	for (int i = 0; i < 3; i++) {
+		cin >> ROBOT[i];
+	}
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			cin >> ROOM[i][j];
+		}
+	}
+
+	ROOM[ROBOT[0]][ROBOT[1]] = 2;
+
+	while (true) {
+		bool flag = checkDir();
+	
+		if (!flag) {
+			pair<int, int> tmp = findBack();
+			if (ROOM[tmp.first][tmp.second] != 1) {
+				ROBOT[0] = tmp.first;
+				ROBOT[1] = tmp.second;
+			}
+			else {
+				break;
+			}
+		}
+
+
+	}
+
+	cout << ANS;
+
+	system("pause");
+	return 0;
+}
