@@ -1,0 +1,72 @@
+#include <iostream>
+#include <cmath>
+#include <vector>
+
+using namespace std;
+
+int N, L;
+int MAP[100][100] = {0,}; //rc
+int MAP2[100][100] = {0,}; //cr
+
+void Input(){
+    cin >> N >> L;
+    for(int i= 0; i<N; i++){
+        for(int j = 0; j<N; j++){
+            cin >> MAP[i][j];
+            MAP2[j][i] = MAP[i][j];
+        }
+    }
+}
+
+bool Can_Slope(int M[][100], int x, int y){
+    int standard = M[x][y+1];
+    for(int j = y+1; j<y+1+L; j++){
+        if(standard != M[x][j]) return false;
+    }
+    return true;
+}
+
+int Make_Road(int M[][100]){
+    int total = 0;
+    for(int i = 0; i<N; i++){
+        bool can = true;
+        int before = 1;
+
+        for(int j = 0; j<N-1; j++){
+            if(M[i][j] == M[i][j+1]) before++;
+            else if(M[i][j] == M[i][j+1] + 1){
+                if(Can_Slope(M, i, j)){
+                    j = j+L-1;
+                    before = 0;
+                }
+                else{
+                    can = false;
+                    break;
+                }
+            }
+            else if(M[i][j] == M[i][j+1] - 1){
+                if(before >= L) before = 1;
+                else{
+                    can = false;
+                    break;
+                }
+            }
+            else{
+                can = false;
+                break;
+            }
+        }
+
+        if(can) total++;
+    }
+    return total;
+}
+
+int main(){
+    Input();
+    int ans = Make_Road(MAP) + Make_Road(MAP2);
+
+    cout << ans;
+
+    return 0;
+}
