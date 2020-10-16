@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int MAP[101][101] = { 0, };
+int N, ANS = 0;
+int D[20][4] = { 0, };
+int X[4] = { 0,-1,0,1 };
+int Y[4] = { 1,0,-1,0 };
+vector<vector<int>> Gen;
+
+void Input() {
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		cin >> D[i][1] >> D[i][0] >> D[i][2] >> D[i][3];
+	}
+}
+
+void Make_Generation(int n) {
+	int d = D[n][2]; int g = D[n][3]; int idx = 0;
+	vector<int> gen;
+
+	gen.push_back(d);
+
+	for (int i = 0; i < g; i++) {
+		for (int j = idx; j >= 0; j--) {
+			gen.push_back((gen[j] + 1) % 4);
+		}
+		idx = gen.size() - 1;
+	}
+
+	Gen.push_back(gen);
+}
+
+void Check_Dragon() {
+	for (int i = 0; i < N; i++) {
+		int x = D[i][0]; int y = D[i][1]; MAP[x][y] = 1;
+		for (int j = 0; j < (int)Gen[i].size(); j++) {
+			x += X[Gen[i][j]]; y += Y[Gen[i][j]];
+			MAP[x][y] = 1;
+		}
+	}
+
+}
+
+void Check_Square() {
+	for (int x = 0; x <= 99; x++) {
+		for (int y = 0; y <= 99; y++) {
+			if (MAP[x][y] == 1 && MAP[x + 1][y] == 1
+				&& MAP[x][y + 1] == 1 && MAP[x + 1][y + 1] == 1) ANS++;
+		}
+	}
+}
+
+int main() {
+	Input();
+
+	for (int i = 0; i < N; i++) {
+		Make_Generation(i);
+	}
+
+	Check_Dragon();
+	Check_Square();
+
+	cout << ANS;
+	return 0;
+}
