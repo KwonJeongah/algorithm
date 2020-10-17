@@ -1,0 +1,109 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+struct cctv {
+	int type, row, col;
+};
+
+int N, M;
+int Min = 2147483647;
+int CCTV_cnt = 0;
+int Rot[6] = { 0, 4, 2, 4, 4, 1 };
+int Dir[6] = { 0, 1, 2, 2, 3, 4 };
+vector<vector<int>> Room(10, vector<int>(10, -2));
+vector<cctv> CCTV;
+
+void Input() {
+	cin >> N >> M;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < M; j++) {
+			cin >> Room[i][j];
+			if (Room[i][j] != 0 && Room[i][j] != 6) {
+				cctv tmp = { Room[i][j], i, j };
+				CCTV.push_back(tmp);
+				CCTV_cnt++;
+			}
+		}
+	}
+}
+
+void check(int type, int rot, int r, int c) {
+	vector<int> dir;
+	
+	if (type == 2) {
+		dir.push_back(0 + rot);
+		dir.push_back(2 + rot);
+	}
+	else {
+		for (int i = 0; i < Dir[type]; i++) {
+			dir.push_back((i + rot + 1) % 4);
+		}
+	}
+	
+	for (int i = 0; i < Dir[type]; i++) {
+		int x = r, y = c;
+		switch (dir[i]) {
+		case 0: // 동
+			while (y + 1 < M && Room[x][y + 1] != 6) {
+				if (Room[x][y + 1] == 0) Room[x][y + 1] = -1;
+				y++;
+			}
+			break;
+		case 1: // 북
+			while (x - 1 >= 0 && Room[x - 1][y] != 6) {
+				if (Room[x - 1][y] == 0) Room[x - 1][y] = -1;
+				x--;
+			}
+			break;
+		case 2: // 서
+			while (y - 1 >= 0 && Room[x][y - 1] != 6) {
+				if (Room[x][y - 1] == 0) Room[x][y - 1] = -1;
+				y--;
+			}
+			break;
+		case 3: // 남
+			while (x + 1 < N && Room[x + 1][y] != 6) {
+				if (Room[x + 1][y] == 0) Room[x + 1][y] = -1;
+				x++;
+			}
+			break;
+		}
+	}
+}
+
+void dfs(int step) {
+	if (step == CCTV_cnt) {
+		int n = 0;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				if (Room[i][j] == 0) n++;
+			}
+		}
+		if (Min > n) Min = n;
+		return;
+	}
+
+	vector<vector<int>> Room2 = Room;
+
+	int type = CCTV[step].type;
+	int r = CCTV[step].row;
+	int c = CCTV[step].col;
+
+	for (int rot = 0; rot < Rot[type]; rot++) {
+		check(type, rot, r, c);
+		dfs(step + 1);
+
+		Room = Room2;
+	}
+}
+
+int main() {
+	Input();
+	dfs(0);
+
+	cout << Min;
+	system("pause");
+	return 0;
+}
