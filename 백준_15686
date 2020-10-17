@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+using namespace std;
+
+int MIN = 2147483647;
+int N, M;
+int Map[50][50];
+vector<pair<int,int>> Chicken;
+vector<pair<int,int>> Home;
+
+void Input(){
+    cin >> N >> M;
+    for(int i = 0; i<N; i++){
+        for(int j = 0; j<N; j++){
+            cin >> Map[i][j];
+            if(Map[i][j] == 1){
+                Home.push_back(make_pair(i,j));
+            }
+            else if(Map[i][j] == 2){
+                Chicken.push_back(make_pair(i,j));
+            }
+        }
+    }
+}
+
+int Cal_dis(int c, int h){
+    int dis = abs(Chicken[c].first-Home[h].first) 
+    + abs(Chicken[c].second - Home[h].second);
+    return dis;
+}
+
+void Cal_choice(vector<int> &ind){
+    int Csize = Chicken.size();
+    int Hsize = Home.size();
+    int sum = 0;
+
+    for(int i = 0; i<Hsize; i++){
+        int min_dis = 2147483647;
+        for(int j = 0; j<Csize; j++){
+            int tmp = Cal_dis(j,i);
+            if(ind[j]==1 && min_dis > tmp) min_dis = tmp; 
+        }
+        sum+=min_dis;
+    }
+    if(MIN > sum) MIN = sum;
+}
+
+void Choice(){
+    for(int i = 1; i<=M; i++){
+        vector<int> ind;
+        for(int j = 0; j<(int)Chicken.size()-i; j++){
+            ind.push_back(0);
+        }
+        for(int j = 0; j<i; j++){
+            ind.push_back(1);
+        }
+        do{
+            Cal_choice(ind);
+        }while(next_permutation(ind.begin(), ind.end()));
+    }
+}
+
+int main(){
+    Input();
+    Choice();
+
+    cout << MIN;
+    return 0;
+}
