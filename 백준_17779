@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int N, ANS = 2147483647;
+int Map[30][30];
+vector<vector<int>> Group(30, vector<int>(30));
+int Dr[4] = { -1, 1, 0, 0 };
+int Dc[4] = { 0, 0, -1, 1 };
+
+void Input() {
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			cin >> Map[i][j];
+		}
+	}
+}
+
+void Dfs(int r, int c, int g) {
+	if (r<0 || r>N - 1 || c<0 || c>N - 1) return;
+	if (Group[r][c] != 0) return;
+	Group[r][c] = g;
+	for (int i = 0; i < 4; i++) {
+		Dfs(r + Dr[i], c + Dc[i], g);
+	}
+}
+
+void Sum() {
+	int sum[6] = { 0 };
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			sum[Group[i][j]] += Map[i][j];
+		}
+	}
+	sum[5] += sum[0];
+	int max = -1;
+	int min = 2147483647;
+
+	for (int i = 1; i <= 5; i++) {
+		if (max < sum[i]) max = sum[i];
+		if (min > sum[i]) min = sum[i];
+	}
+
+	if (ANS > max - min) ANS = max - min;
+}
+
+void Grouping(int x, int y, int d1, int d2) {
+	for (int i = 0; i <= d1; ++i) {
+		Group[x + i][y - i] = 5;
+		Group[x + d2 + i][y + d2 - i] = 5;
+	}
+	for (int i = 0; i <= d2; ++i) {
+		Group[x + i][y + i] = 5;
+		Group[x + d1 + i][y - d1 + i] = 5;
+	}
+
+	for (int r = x - 1; r >= 0; r--) {
+		Group[r][y] = 1;
+	}
+	for (int c = y + d2 + 1; c < N; c++) {
+		Group[x + d2][c] = 2;
+	}
+	for (int c = y - d1 - 1; c >= 0; c--) {
+		Group[x + d1][c] = 3;
+	}
+	for (int r = x + d1 + d2 + 1; r < N; r++) {
+		Group[r][y - d1 + d2] = 4;
+	}
+
+	Dfs(0, 0, 1);
+	Dfs(0, N-1, 2);
+	Dfs(N-1, 0, 3);
+	Dfs(N - 1, N - 1, 4);
+
+	Sum();
+}
+
+void Select_Standard() {
+	for (int x = 1; x <= N - 2; x++) {
+		for (int y = 2; y <= N - 1; y++) {
+			for (int d1 = 1; d1 <= N - 1 && y - d1 >= 0; d1++) {
+				for (int d2 = 1; x + d1 + d2 <= N - 1 && y - d1 + d2 <= N - 1; d2++) {
+					vector<vector<int>> Group2(20, vector<int>(20));
+					Grouping(x, y, d1, d2);
+
+					Group = Group2;
+				}
+			}
+		}
+	}
+}
+
+int main() {
+	Input();
+	Select_Standard();
+
+	cout << ANS;
+
+	system("pause");
+	return 0;
+}
