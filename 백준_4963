@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int dx[8] = { -1, 1, 0, 0, -1, -1, 1, 1 };
+int dy[8] = { 0, 0, -1, 1, -1, 1, -1, 1 };
+int map[50][50] = { 0, };
+vector<vector<int>> visited(50, vector<int>(50, 0));
+int W, H;
+
+void dfs(int r, int c) {
+	visited[r][c] = 1;
+	for (int i = 0; i < 8; i++) {
+		if (r + dx[i] >= 0 && r + dx[i] < H && c + dy[i] >= 0 && c + dy[i] < W) {
+			if (map[r + dx[i]][c + dy[i]] == 1 && visited[r+dx[i]][c+dy[i]] == 0) {
+				dfs(r + dx[i], c + dy[i]);
+			}
+		}
+	}
+}
+
+int find_island() {
+	int ans = 0;
+	vector<vector<int>> visited2(50, vector<int>(50, 0));
+	visited = visited2;
+
+	for (int i = 0; i < H; i++) {
+		for (int j = 0; j < W; j++) {
+			if (map[i][j] == 1 && visited[i][j] == 0) {
+				ans++;
+				dfs(i, j);
+			}
+		}
+	}
+
+	return ans;
+}
+
+int main() {
+	while (true) {
+		cin >> W >> H;
+		if (W == 0 && H == 0) break;
+		else {
+			for (int h = 0; h < H; h++) {
+				for (int w = 0; w < W; w++) {
+					cin >> map[h][w];
+				}
+			}
+			cout << find_island() << endl;
+		}
+	}
+	return 0;
+}
+
