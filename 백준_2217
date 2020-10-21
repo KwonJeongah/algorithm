@@ -1,0 +1,33 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int N, ANS = -1;
+vector<int> Rope;
+
+void choice(int k) {
+	int min = Rope[k - 1];
+	int w;	
+	w = min * k;
+	if (ANS < w) ANS = w;
+}
+
+int main() {
+	cin >> N;
+	for (int i = 0; i < N; i++) {
+		int tmp;
+		cin >> tmp;
+		Rope.push_back(tmp);
+	}
+
+	sort(Rope.rbegin(), Rope.rend());
+
+	for (int i = 1; i <= N; i++) {
+		choice(i);
+	}
+
+	cout << ANS;
+
+	return 0;
+}
