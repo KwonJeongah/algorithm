@@ -1,0 +1,25 @@
+#include <iostream>
+
+using namespace std;
+
+long long F[91] = { 0 };
+
+void fibo() {
+	F[1] = 1;
+	F[2] = 1;
+
+	for (int i = 3; i <= 90; i++) {
+		F[i] = F[i - 1] + F[i - 2];
+	}
+}
+
+int main() {
+	int N;
+	cin >> N;
+
+	fibo();
+
+	cout << F[N];
+
+	return 0;
+}
