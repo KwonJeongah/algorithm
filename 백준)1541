@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string>
+#include <stack>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+string s;
+stack<char> A;
+vector<int> B;
+
+int main() {
+	cin >> s;
+
+	int idx = 0;
+
+	for (int i = 0; i < (int)s.size(); i++) {
+		if (s[i] == '-' || s[i] == '+' || i == (int)s.size() - 1) {
+			string tmp;
+			if (i == (int)s.size() - 1) tmp = s.substr(idx, i + 1 - idx);
+			else { tmp = s.substr(idx, i - idx); idx = i + 1; }
+
+			B.push_back(stoi(tmp));
+			if (!A.empty() && A.top() == '+') {
+				int x, y;
+				A.pop();
+
+				x = B.back(); B.pop_back();
+				y = B.back(); B.pop_back();
+
+				B.push_back(x + y);
+			}
+			if (s[i] == '-' || s[i] == '+') A.push(s[i]);
+		}
+	}
+
+	int ans = B[0];
+	for (int i = 1; i < (int)B.size(); i++) {
+		ans = ans - B[i];
+	}
+
+	cout << ans;
+
+	return 0;
+}
