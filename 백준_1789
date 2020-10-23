@@ -1,0 +1,19 @@
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    long long s;
+    long long sum = 0;
+    long long cnt = 0;
+    cin >> s;
+
+    while(1){
+        cnt++;
+        sum += cnt;
+        if(sum > s) break;
+    }
+    cout << cnt - 1;
+    
+    return 0;
+}
