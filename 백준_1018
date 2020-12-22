@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int N, M;
+int MIN = 2147483647;
+vector<string> board;
+string str[2] = {"WBWBWBWB", "BWBWBWBW"};
+
+int sol(int r, int c, char first){
+    int idx = 0;
+    int ans = 0;
+    if(first == 'B') idx = 1;
+
+    for(int i = r; i<r+8; i++){
+        string tmp = board[i].substr(c, 8);
+        for(int k = 0; k<8; k++){
+            if(tmp[k] != str[idx][k]) ans++;
+        }
+        idx++;
+        if(idx > 1) idx = 0;
+    }
+    return ans;
+}
+
+int main(){
+    cin >> N >> M;
+
+    for(int i = 0; i<N; i++){
+        string tmp;
+        cin >> tmp;
+        board.push_back(tmp);
+    }
+
+    for(int i = 0; i<=N-8; i++){
+        for(int j = 0; j<=M-8; j++){
+            int w = sol(i, j, 'W');
+            int b = sol(i, j, 'B');
+            MIN = min(MIN, min(w,b));
+        }
+    }
+
+    cout << MIN;
+
+    return 0;
+}
