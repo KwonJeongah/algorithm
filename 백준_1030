@@ -1,0 +1,42 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int s, n, k, r1, r2, c1, c2;
+int len, boarder, unit;
+
+// 가운데 것인지 확인
+bool isMiddle(int fr, int fc){
+    if((fr >= boarder && fr < boarder+k )
+        && (fc >= boarder && fc < boarder + k)) return true;
+    return false;
+}
+
+int getColor(int r, int c){
+    int unit = len / n;
+
+    while(unit!= 0){
+        if(isMiddle(r/unit, c/unit)) return 1;
+        
+        // 범위 줄이기
+        r -= ((r/unit)*unit);
+        c -= ((c/unit)*unit);
+        unit /= n;
+    }
+    return 0;
+}
+
+int main(){
+    cin >> s >> n >> k >> r1 >> r2 >> c1 >> c2;
+
+    len = pow(n, s);
+    boarder = (n-k)/2;
+
+    for(int r = r1; r<=r2; r++){
+        for(int c = c1; c<=c2; c++){
+            cout << getColor(r, c);
+        }
+        cout << '\n';
+    }
+    return 0;
+}
